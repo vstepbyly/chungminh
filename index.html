@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phá Kén - Year End Party</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #f3f4f6;
+            font-family: 'Cormorant Garamond', serif;
+            overflow-x: hidden;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-dreamy { font-family: 'Cormorant Garamond', serif; }
+        .font-sans { font-family: 'Be Vietnam Pro', sans-serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.02;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+        }
+        
+        .glow-purple {
+            filter: blur(120px);
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+        }
+        
+        .glow-soft {
+            filter: blur(150px);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0) 80%);
+        }
+        
+        .text-dreamy {
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+        }
+
+        #root:empty::before {
+            content: 'Đang chuẩn bị kén...';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: rgba(168, 85, 247, 0.4);
+            font-size: 1.5rem;
+        }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0/client",
+    "framer-motion": "https://esm.sh/framer-motion@10.16.4?external=react,react-dom",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div id="root"></div>
+    <div class="grain"></div>
+
+    <script type="module">
+        import React, { useState, useMemo, useEffect } from 'react';
+        import { createRoot } from 'react-dom';
+        import { motion, AnimatePresence } from 'framer-motion';
+
+        const h = React.createElement;
+
+        // --- COMPONENTS ---
+
+        const FloatingButterflies = () => {
+            const BUTTERFLY_COUNT = 15;
+            const butterflies = useMemo(() => Array.from({ length: BUTTERFLY_COUNT }).map((_, i) => ({
+                id: i,
+                x: Math.random() * 100,
+                y: Math.random() * 100,
+                size: Math.random() * 20 + 10,
+                duration: Math.random() * 30 + 30,
+                delay: Math.random() * -30,
+                blur: Math.random() * 5 + 3,
+            })), []);
+
+            return h('div', { className: "fixed inset-0 pointer-events-none z-0 overflow-hidden" },
+                butterflies.map((b) => h(motion.div, {
+                    key: b.id,
+                    initial: { x: `${b.x}vw`, y: `${b.y}vh`, opacity: 0 },
+                    animate: {
+                        x: [`${b.x}vw`, `${(b.x + 10) % 100}vw`, `${b.x}vw`],
+                        y: [`${b.y}vh`, `${(b.y - 15) % 100}vh`, `${b.y}vh`],
+                        opacity: [0, 0.3, 0.1, 0],
+                        rotate: [0, 15, -15, 0],
+                    },
+                    transition: { duration: b.duration, repeat: Infinity, delay: b.delay, ease: "easeInOut" },
+                    className: "absolute flex items-center justify-center",
+                    style: { fontSize: b.size, filter: `blur(${b.blur}px)` }
+                }, h(motion.span, {
+                    animate: { scaleX: [1, 0.7, 1] },
+                    transition: { duration: 1.5, repeat: Infinity },
+                    className: "text-purple-300/30"
+                }, "🦋")))
+            );
+        };
+
+        const Hero = () => h(motion.div, {
+            initial: { opacity: 0 },
+            whileInView: { opacity: 1 },
+            transition: { duration: 2 },
+            className: "text-center max-w-5xl px-4"
+        },
+            h('span', { className: "font-sans text-purple-400/70 uppercase tracking-[0.5em] text-sm sm:text-xl font-medium mb-12 block" }, "Year End Party 2025"),
+            h('h1', { className: "font-serif italic text-7xl sm:text-[11rem] font-medium text-white mt-12 mb-20 relative leading-none text-dreamy" },
+                "Phá Kén",
+                h(motion.span, {
+                    className: "absolute -top-12 -right-12 text-5xl opacity-20 filter blur-[1px]",
+                    animate: { rotate: [0, 10, -10, 0], y: [0, -10, 10, 0] },
+                    transition: { duration: 8, repeat: Infinity }
+                }, "🦋")
+            ),
+            h('div', { className: "h-px w-24 bg-gradient-to-r from-transparent via-purple-500/40 to-transparent mx-auto mb-20" }),
+            h('p', { className: "font-dreamy italic text-gray-200 text-2xl sm:text-4xl font-normal leading-relaxed mb-32 max-w-3xl mx-auto px-6 text-dreamy" },
+                "\"2025 là một năm thử thách, chúng mình đã rời bỏ văn phòng, nhiều tự do hơn, nhưng cũng nhiều áp lực hơn. ",
+                h('br'), h('br'),
+                "2026, hy vọng ", h('span', { className: "text-purple-300 font-medium" }, "cả hai"), " sẽ lột xác mạnh mẽ, chuyển mình ngoạn mục tựa phép màu.\""
+            ),
+            h('div', { className: "flex flex-col gap-10 items-center text-white" },
+                h('p', { className: "font-serif italic text-6xl sm:text-8xl" }, "01 . 01 . 2026"),
+                h('div', { className: "flex items-center gap-8" },
+                    h('div', { className: "h-px w-10 bg-purple-500/40" }),
+                    h('p', { className: "font-sans text-sm tracking-[0.2em] uppercase text-purple-200/80" }, "18:45 — 22:00"),
+                    h('div', { className: "h-px w-10 bg-purple-500/40" })
+                )
+            )
+        );
+
+        const Agenda = () => {
+            const chapters = [
+                {
+                    title: "Chapter 1: Tổ Kén", subtitle: "Nhìn Lại",
+                    items: [
+                        { time: "18:45 – 19:15", label: "Set the Space", desc: "Hạ nhịp. Vào mood." },
+                        { time: "19:15", label: "Opening", desc: "Set up. Bật nhạc. Thắp nến." },
+                        { time: "19:30 – 20:00", label: "Ăn tối", desc: "Thưởng thức cùng nhau." },
+                        { time: "20:00 – 20:25", label: "Recap & Văn nghệ", desc: "Những gì đã đi qua." },
+                        { time: "20:25 – 20:45", label: "Đóng kén", desc: "Viết ra điều đã làm. Bỏ bớt thứ không còn cần." },
+                    ]
+                },
+                {
+                    title: "Chapter 2: Phá Kén", subtitle: "Mở Ra",
+                    items: [
+                        { time: "20:45 – 21:05", label: "Viết mở ra", desc: "Cho bản thân. Cho chúng mình." },
+                        { time: "21:05 – 21:20", label: "Tarot", desc: "Từ khóa dẫn lối cho năm 2026." },
+                        { time: "21:20 – 21:40", label: "Toast", desc: "Cảm ơn mình. Cảm ơn nhau. Chào năm mới." },
+                        { time: "21:40 – 21:50", label: "Thiền kết", desc: "Ngồi yên. Đặt tay lên tim. Kết lại." },
+                    ]
+                }
+            ];
+
+            return h('div', { className: "space-y-80" },
+                chapters.map((chapter, idx) => h(motion.div, { key: chapter.title, initial: { opacity: 0 }, whileInView: { opacity: 1 }, transition: { duration: 1.5 }, className: "relative" },
+                    h('div', { className: "text-center mb-48" },
+                        h('h2', { className: "font-serif italic text-7xl sm:text-9xl text-white mb-6 text-dreamy" }, chapter.title),
+                        h('p', { className: "font-dreamy italic text-3xl sm:text-5xl text-purple-300/70 text-dreamy" }, chapter.subtitle)
+                    ),
+                    h('div', { className: "space-y-28 max-w-3xl mx-auto" },
+                        chapter.items.map((item, i) => h(motion.div, { key: item.time, initial: { opacity: 0, y: 15 }, whileInView: { opacity: 1, y: 0 }, className: "flex flex-col sm:flex-row gap-4 sm:gap-20 items-center sm:items-baseline text-center sm:text-left group" },
+                            h('span', { className: "font-dreamy italic text-xl sm:text-2xl text-purple-300/40 min-w-[180px] group-hover:text-purple-300 transition-colors" }, item.time),
+                            h('div', { className: "flex-1" },
+                                h('h3', { className: "font-dreamy italic text-3xl sm:text-4xl text-white mb-3 group-hover:text-purple-200 transition-colors" }, item.label),
+                                h('p', { className: "font-inter text-gray-400 text-lg sm:text-xl leading-relaxed opacity-80" }, item.desc)
+                            )
+                        ))
+                    ),
+                    h('div', { className: `absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] blur-[150px] opacity-[0.06] rounded-full ${idx === 0 ? 'bg-white' : 'bg-purple-500'}` })
+                ))
+            );
+        };
+
+        const Footer = () => h('footer', { className: "w-full pb-64 pt-48 px-6 text-center relative" },
+            h(motion.div, { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, transition: { duration: 2.5 }, className: "max-w-3xl mx-auto" },
+                h('p', { className: "font-serif italic text-5xl sm:text-7xl text-white mb-20 leading-[1.15] text-dreamy" },
+                    "Hẹn gặp anh tại ", h('br'),
+                    h('span', { className: "font-dreamy italic text-purple-300/80" }, "tổ kén của chúng mình.")
+                ),
+                h('div', { className: "space-y-12" },
+                    h('p', { className: "font-dreamy italic text-3xl sm:text-4xl text-purple-200/50" }, "01 . 01 . 2026 — Hà Nội"),
+                    h('div', { className: "flex justify-center items-center gap-12 text-5xl opacity-40" },
+                        h('span', { className: "filter grayscale" }, "🐛"),
+                        h('div', { className: "h-px w-20 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent" }),
+                        h('span', null, "🦋")
+                    )
+                ),
+                h('div', { className: "mt-48 font-inter text-sm text-gray-500 opacity-60" }, "created with love by \"công chúa của anh\"")
+            )
+        );
+
+        const App = () => {
+            const [hasStarted, setHasStarted] = useState(false);
+
+            return h('div', { className: "min-h-screen relative flex flex-col items-center justify-center bg-[#050505] overflow-hidden" },
+                h('div', { className: "fixed top-[-15%] left-[-5%] w-[60%] h-[60%] glow-purple pointer-events-none" }),
+                h('div', { className: "fixed bottom-[-15%] right-[-5%] w-[60%] h-[60%] glow-purple pointer-events-none opacity-40" }),
+                h('div', { className: "fixed top-[30%] left-[20%] w-[30%] h-[30%] glow-soft pointer-events-none" }),
+                
+                h(AnimatePresence, { mode: "wait" },
+                    !hasStarted ? h(motion.div, {
+                        key: "entrance",
+                        initial: { opacity: 0 },
+                        animate: { opacity: 1 },
+                        exit: { opacity: 0, scale: 1.05, filter: 'blur(30px)' },
+                        transition: { duration: 1.5 },
+                        className: "z-10 text-center px-4"
+                    },
+                        h(motion.p, { className: "font-dreamy italic text-2xl text-purple-300/60 mb-10 tracking-widest" }, "Mời Bạn đồng hành của em"),
+                        h(motion.h1, { className: "font-serif italic text-8xl md:text-[10rem] text-white mb-24 tracking-tighter leading-none text-dreamy" }, "Phá kén"),
+                        h(motion.button, {
+                            onClick: () => setHasStarted(true),
+                            whileHover: { scale: 1.05 },
+                            className: "px-14 py-4 border border-purple-400/30 rounded-full font-dreamy italic text-xl text-purple-200/80 hover:text-white hover:border-purple-400 transition-all"
+                        }, "Chạm để bắt đầu")
+                    ) : h(motion.main, {
+                        key: "main",
+                        initial: { opacity: 0 },
+                        animate: { opacity: 1 },
+                        transition: { duration: 2 },
+                        className: "w-full relative z-20 flex flex-col"
+                    },
+                        h(FloatingButterflies),
+                        h('section', { className: "min-h-screen flex items-center justify-center" }, h(Hero)),
+                        h('section', { className: "w-full max-w-5xl mx-auto px-6 py-40" }, h(Agenda)),
+                        h(Footer)
+                    )
+                )
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(h(App));
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
